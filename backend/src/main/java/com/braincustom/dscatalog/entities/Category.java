@@ -14,7 +14,7 @@ public class Category implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)//id auto incrementável
+	@GeneratedValue(strategy = GenerationType.IDENTITY)//id auto incrementável no BD
 	private Long id;
 	private String name;
 	
