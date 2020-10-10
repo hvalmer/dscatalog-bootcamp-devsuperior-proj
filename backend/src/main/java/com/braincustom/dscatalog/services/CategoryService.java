@@ -1,10 +1,12 @@
 package com.braincustom.dscatalog.services;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.braincustom.dscatalog.dto.CategoryDTO;
 import com.braincustom.dscatalog.entities.Category;
 import com.braincustom.dscatalog.repositories.CategoryRepository;
 
@@ -17,7 +19,9 @@ public class CategoryService {
 	@Autowired //injeta automaticamente a dependência
 	private CategoryRepository repository;
 	
-	public List<Category> findAll(){
-		return repository.findAll();
+	public List<CategoryDTO> findAll(){
+		List<Category> list = repository.findAll();
+		//lista com expressão Lambda
+		return list.stream().map(x -> new CategoryDTO(x)).collect(Collectors.toList());
 	}
 }
