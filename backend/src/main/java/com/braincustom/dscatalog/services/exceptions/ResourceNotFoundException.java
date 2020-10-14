@@ -1,10 +1,10 @@
 package com.braincustom.dscatalog.services.exceptions;
 
-public class EntityNotFoundException extends RuntimeException {
+public class ResourceNotFoundException extends RuntimeException {
 	private static final long serialVersionUID = 1L;
 	
 	//construtor
-	public EntityNotFoundException(String msg) {
+	public ResourceNotFoundException(String msg) {
 		super(msg);
 	}
 
