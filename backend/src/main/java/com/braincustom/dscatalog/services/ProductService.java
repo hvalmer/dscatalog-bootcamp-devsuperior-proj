@@ -12,8 +12,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.braincustom.dscatalog.dto.CategoryDTO;
 import com.braincustom.dscatalog.dto.ProductDTO;
+import com.braincustom.dscatalog.entities.Category;
 import com.braincustom.dscatalog.entities.Product;
+import com.braincustom.dscatalog.repositories.CategoryRepository;
 import com.braincustom.dscatalog.repositories.ProductRepository;
 import com.braincustom.dscatalog.services.exceptions.DatabaseException;
 import com.braincustom.dscatalog.services.exceptions.ResourceNotFoundException;
@@ -26,6 +29,11 @@ public class ProductService {
 
 	@Autowired // injeta automaticamente a dependência
 	private ProductRepository repository;
+	
+	/*criando uma dependência para o category repository*/
+	@Autowired
+	private CategoryRepository categoryRepository;
+	
 
 	// busca paginada
 	@Transactional(readOnly = true)
@@ -45,11 +53,11 @@ public class ProductService {
 	@Transactional
 	public ProductDTO insert(ProductDTO dto) {
 		Product entity = new Product();
-		//entity.setName(dto.getName());
+		/*Método auxiliar para insert e update*/
+		copyDtoToEntity(dto, entity);
 		// salvando...
 		entity = repository.save(entity);
 		return new ProductDTO(entity);
-
 	}
 
 	@Transactional
@@ -58,7 +66,8 @@ public class ProductService {
 			// atualizando um registro na JPA
 			Product entity = repository.getOne(id);// não toca no BD, instancia um objeto provisório. Atualiza os dados
 													// com getOne()
-			//entity.setName(dto.getName());
+			/*Método auxiliar para insert e update*/
+			copyDtoToEntity(dto, entity);
 			entity = repository.save(entity);// salvando no BD
 			return new ProductDTO(entity);
 		} catch (EntityNotFoundException e) {
@@ -69,11 +78,31 @@ public class ProductService {
 	public void delete(Long id) {
 		try {
 			repository.deleteById(id);
-		} catch (EmptyResultDataAccessException e) {
+		} 
+		catch (EmptyResultDataAccessException e) {
 			throw new ResourceNotFoundException("Id not found " + id);
-		} catch (DataIntegrityViolationException e) {
+		} 
+		catch (DataIntegrityViolationException e) {
 			throw new DatabaseException("Integrity violation!");
 		}
+	}
 
+	private void copyDtoToEntity(ProductDTO dto, Product entity) {
+		
+		/*atributos da entidade*/
+		entity.setName(dto.getName());
+		entity.setDescription(dto.getDescription());
+		entity.setDate(dto.getDate());
+		entity.setImgUrl(dto.getImgUrl());
+		entity.setPrice(dto.getPrice());
+		
+		/*limpando lista das categorias que por ventura estarão na entidade*/
+		entity.getCategories().clear();
+		
+		/*percorrendo as categorias dto que estão assoc. ao dto*/
+		for(CategoryDTO catDto : dto.getCategories()) {
+			Category category = categoryRepository.getOne(catDto.getId());
+			entity.getCategories().add(category);
+		}
 	}
 }
