@@ -49,7 +49,6 @@ public class CategoryService {
 		//salvando...
 		entity = repository.save(entity);
 		return new CategoryDTO(entity);
-		
 	}
 
 	@Transactional
