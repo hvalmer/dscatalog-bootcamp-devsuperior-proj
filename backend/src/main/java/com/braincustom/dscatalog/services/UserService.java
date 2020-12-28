@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.braincustom.dscatalog.dto.RoleDTO;
 import com.braincustom.dscatalog.dto.UserDTO;
 import com.braincustom.dscatalog.dto.UserInsertDTO;
+import com.braincustom.dscatalog.dto.UserUpdateDTO;
 import com.braincustom.dscatalog.entities.Role;
 import com.braincustom.dscatalog.entities.User;
 import com.braincustom.dscatalog.repositories.RoleRepository;
@@ -65,7 +66,7 @@ public class UserService {
 	}
 
 	@Transactional
-	public UserDTO update(Long id, UserDTO dto) {
+	public UserDTO update(Long id, UserUpdateDTO dto) {
 		try {
 			// atualizando um registro na JPA
 			User entity = repository.getOne(id);// não toca no BD, instancia um objeto provisório. Atualiza os dados
